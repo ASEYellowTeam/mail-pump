@@ -1,0 +1,6 @@
+celery
+redis
+flask
+flask_sqlalchemy
+flask_mail
+flakon

@@ -1,0 +1,39 @@
+swagger: "2.0"
+info:
+  title: BeepBeep Mail Service
+  description: manage email preferences
+  license:
+    name: APLv2
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.1.0
+basePath: /api
+paths:
+    /frequency/{runner_id}:
+      get:
+        operationId: getFrequency
+        description: Get the frequency preference for mail
+        produces:
+        - application/json
+        parameters:
+        - name: runner_id
+          in: path
+          description: ID of Runner
+          required: true
+          type: integer
+        responses:
+          '200':
+            description: The current value of the frequency in int
+      post:
+        operationId: setFrequency
+        description: Set or update the frequency for the email
+        produces:
+        - application/json
+        parameters:
+        - name: runner_id
+          in: path
+          description: ID of Runner
+          required: true
+          type: integer
+        responses:
+          '200':
+            description: An object containing a property update
