@@ -4,6 +4,8 @@ _Send reports via mail_
 [![Build Status](https://travis-ci.org/ytbeepbeep/mail-service.svg?branch=master)](https://travis-ci.org/ytbeepbeep/mail-service)
 [![Coverage Status](https://coveralls.io/repos/github/ytbeepbeep/mail-service/badge.svg?branch=master)](https://coveralls.io/github/ytbeepbeep/mail-service?branch=master)
 
+_This microservice works on port 5003._
+
 ## First setup
 Export the mail variables and the address and the port of the [data-service](https://github.com/ytbeepbeep/data-service) microservice,
 the default is `127.0.0.1:5002`.
@@ -40,8 +42,15 @@ Start the [data-service](https://github.com/ytbeepbeep/data-service) microservic
 1. Load environment variables:  
    `source variables.sh`
 
-3. Start with:  
+2. Start the APIs:  
    `python dataservice/app.py`
+
+#### Terminal #3
+1. Load environment variables:  
+   `source variables.sh`
+
+2. Start the celery worker:  
+    `celery worker -A mailpump.mailpump -B`
 
 
 ## Docker
