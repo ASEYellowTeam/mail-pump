@@ -105,20 +105,17 @@ venv.bak/
 
 # ---------------------------
 
-# Forti's gitignore
-*.un~
-bin
-include
-docs/build
-
 # IDEs (IntelliJ IDEA/PyCharm & VSCode)
 .idea
 *.iml
 .vscode
 
+# PERSONAL SCRIPTS
+venv.sh
+..coverage.swp
+
 # ENVIRONMENTS VARIABLES
 variables.sh
 
 # MIX
-celerybeat-schedule.db
-mail-service.db
+*.db
