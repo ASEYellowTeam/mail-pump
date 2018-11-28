@@ -26,9 +26,3 @@ class Report(db.Model):
     # frequency preference stored in seconds
     def get_frequency(self,):
         return self.frequency/3600.0
-
-    def to_json(self):
-        res = {}
-        for attr in ('id', 'runner_id', 'timestamp', 'frequency'):
-            res[attr] = getattr(self, attr)
-        return res
