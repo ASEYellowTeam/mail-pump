@@ -46,7 +46,6 @@ def send_all_mail():  # pragma: no cover
 def prepare_body(user):
     body = ""
     runs = requests.get(DATASERVICE + '/runs?user_id=' + str(user['id'])).json()
-    #runs = json.load(str(runs))
     if len(runs) == 0:
         return None
     print(runs)
