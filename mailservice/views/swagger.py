@@ -1,7 +1,8 @@
 import os
-
+import json
+from time import time
+from flask import request, jsonify, abort
 from flakon import SwaggerBlueprint
-from flask import request
 from mailservice.database import db, Report
 
 
@@ -10,16 +11,28 @@ api = SwaggerBlueprint('API', __name__, swagger_spec=swagger_spec)
 
 
 @api.operation('setFrequency')
-def set_frequency(runner_id):
-    frequency = int(request.json)
-    report = db.session.query(Report).filter(Report.runner_id == runner_id).first()
+def set_frequency(user_id):
+    if not request.get_json() or not request.get_json()['frequency']:
+        abort(400)
+
+    frequency = float(request.get_json()['frequency'])
+
+    report = db.session.query(Report).filter(Report.user_id == user_id).first()
+    if not report:
+        report = Report()
+        report.user_id = user_id
+        report.timestamp = time()
+
     report.set_frequency(frequency)
     db.session.merge(report)
     db.session.commit()
-    return {'updated': 1}
+
+    return jsonify(1)
 
 
 @api.operation('getFrequency')
-def get_frequency(runner_id):
-    report = db.session.query(Report).filter(Report.runner_id == runner_id).first()
-    return {'updated': report.frequency}
+def get_frequency(user_id):
+    report = db.session.query(Report).filter(Report.user_id == user_id).first()
+    if not report:
+        abort(404)
+    return jsonify({'frequency': report.get_frequency()})

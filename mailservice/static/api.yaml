@@ -1,39 +1,48 @@
 swagger: "2.0"
 info:
   title: BeepBeep Mail Service
-  description: manage email preferences
+  description: Manage email preferences
   license:
-    name: APLv2
-    url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.1.0
+    name: AGPL-3.0
+    url: https://www.gnu.org/licenses/agpl-3.0.en.html
+  version: 0.2.0
 basePath: /api
 paths:
-    /frequency/{runner_id}:
+    /frequency/{user_id}:
       get:
         operationId: getFrequency
         description: Get the frequency preference for mail
         produces:
-        - application/json
+          - application/json
         parameters:
-        - name: runner_id
-          in: path
-          description: ID of Runner
-          required: true
-          type: integer
+          - name: user_id
+            in: path
+            description: ID of user
+            required: true
+            type: integer
         responses:
           '200':
-            description: The current value of the frequency in int
+            description: The current value of the frequency in hour (float)
+          '404':
+            description: user_id not found, there is not frequency set
       post:
         operationId: setFrequency
         description: Set or update the frequency for the email
         produces:
-        - application/json
+          - application/json
         parameters:
-        - name: runner_id
-          in: path
-          description: ID of Runner
-          required: true
-          type: integer
+          - name: user_id
+            in: path
+            description: ID of user
+            required: true
+            type: integer
+          - name: frequency
+            in: query
+            description: The chosen frequency in hour of the mail report
+            required: true
+            type: number
         responses:
           '200':
-            description: An object containing a property update
+            description: Ok
+          '400':
+            description: Bad request, frequency missing
