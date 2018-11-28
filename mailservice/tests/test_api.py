@@ -28,3 +28,14 @@ def test_set_frequency(client):
     frequency = float(reply.get_json()['frequency'])
     assert reply.status_code == 200
     assert frequency == test_frequency
+
+    # Update the frequency
+    test_frequency = 4.0
+    reply = tested_app.post('/frequency/1', json={'frequency': test_frequency})
+    assert reply.status_code == 200
+
+    # Test get frequency on the frequency updated before
+    reply = tested_app.get('/frequency/1')
+    frequency = float(reply.get_json()['frequency'])
+    assert reply.status_code == 200
+    assert frequency == test_frequency

@@ -12,11 +12,8 @@ class Report(db.Model):
     timestamp = db.Column(db.Float)
     frequency = db.Column(db.Float)
 
-    def set_user(self, user_id):
-        self.user_id = user_id
-
     # timestamp from previous report, in seconds
-    def set_timestamp(self):
+    def set_timestamp(self):  # pragma: no cover
         self.timestamp = time()
 
     # frequency preference stored in seconds

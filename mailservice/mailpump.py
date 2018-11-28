@@ -61,7 +61,7 @@ def prepare_body(user):
 
 
 @periodic_task(run_every=timedelta(seconds=60))
-def periodic_send():
+def periodic_send():  # pragma: no cover
     send_all_mail()
 
 

@@ -12,10 +12,21 @@ def test_prepare_body(client):
     tested_app, app = client
 
     with requests_mock.mock() as m:
-        user = {
+        user1 = {
             "id": 1,
-            "email": "test@example.com",
-            "firstname": "Test",
+            "email": "test1@example.com",
+            "firstname": "Test1",
+            "lastname": "Tester",
+            "age": 1,
+            "max_hr": 1,
+            "rest_hr": 1,
+            "vo2max": 1,
+            "weight": 1,
+        }
+        user2 = {
+            "id": 2,
+            "email": "test2@example.com",
+            "firstname": "Test1",
             "lastname": "Tester",
             "age": 1,
             "max_hr": 1,
@@ -36,9 +47,15 @@ def test_prepare_body(client):
             "average_heartrate": None,
             "start_date": 1500000000.0,
         }
+
+        # Test the prepare body
         m.get(DATASERVICE + '/runs?user_id=1', json=[run])
-        assert prepare_body(user) == "name: Test Run\ndistance: 50000.0\nstart_date: 1500000000.0\n" \
+        assert prepare_body(user1) == "name: Test Run\ndistance: 50000.0\nstart_date: 1500000000.0\n" \
             "average_speed: 10.0\nelapsed_time: 5000.0\naverage_heartrate: None\ntotal_elevation_gain: 3.0\n\n\n"
+
+        # Test the prepare body with a non existing user
+        m.get(DATASERVICE + '/runs?user_id=2', json=[])
+        assert prepare_body(user2) is None
 
 
 def test_mail_config(client):
