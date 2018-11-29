@@ -46,3 +46,22 @@ paths:
             description: Ok
           '400':
             description: Bad request, frequency missing
+    /reports:
+      delete:
+        operationId: deleteFrequency
+        description: Deletion of all reports of user id
+        produces:
+          - application/json
+        parameters:
+          - name: user_id
+            in: query
+            description: ID of user
+            required: true
+            type: integer
+        responses:
+          '200':
+            description: Delete all reports
+          '400':
+            description: Bad request
+          '404':
+            description: The user does not exists

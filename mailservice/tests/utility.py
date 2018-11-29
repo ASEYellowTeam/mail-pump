@@ -2,7 +2,7 @@ import pytest
 import os
 import tempfile
 from mailservice.app import create_app
-from mailservice.database import db
+from mailservice.database import db, Report
 
 
 @pytest.fixture
@@ -27,3 +27,12 @@ def client():
 
     os.close(db_fd)
     os.unlink(app.config['DATABASE'])
+
+
+def new_report():
+    report = Report()
+    report.id = 1
+    report.user_id = 1
+    report.timestamp = 1000000.0
+    report.frequency = 10000.0
+    return report

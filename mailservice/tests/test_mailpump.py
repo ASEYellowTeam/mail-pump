@@ -1,8 +1,9 @@
 import os
 import requests_mock
 from flask import jsonify
-from mailservice.tests.utility import client
+from mailservice.tests.utility import client, new_report
 from mailservice.mailpump import prepare_body
+from mailservice.database import db, Report
 
 
 DATASERVICE = os.environ['DATA_SERVICE']
@@ -67,3 +68,37 @@ def test_mail_config(client):
     assert app.config['MAIL_PASSWORD'] == 'TestYellowTeam7'
     assert app.config['MAIL_USE_TLS'] is False
     assert app.config['MAIL_USE_SSL'] is True
+
+def test_delete_all_report(client):
+    tested_app, app = client
+
+    # Add a new report in database
+    report = new_report()
+    with app.app_context():
+        db.session.add(report)
+        db.session.commit()
+        report = db.session.query(Report).first()
+
+    with requests_mock.mock() as m:
+
+        with app.app_context():
+            assert db.session.query(Report).filter(Report.user_id == report.id).count() == 1
+        m.delete(DATASERVICE + '/reports', json=[])
+
+        assert tested_app.delete('/reports?user_id=1').status_code == 200
+        with app.app_context():
+            assert db.session.query(Report).filter(Report.user_id == report.id).count() == 0
+
+
+def test_delete_all_nonexisting_report(client):
+    tested_app, app = client
+
+    with requests_mock.mock() as m:
+        with app.app_context():
+            assert db.session.query(Report).filter(Report.user_id == 1).count() == 0
+        m.delete(DATASERVICE + '/reports', json=[])
+
+        assert tested_app.delete('/reports?user_id=1').status_code == 404
+        assert tested_app.delete('/reports').status_code == 400
+        with app.app_context():
+            assert db.session.query(Report).filter(Report.user_id == 1).count() == 0

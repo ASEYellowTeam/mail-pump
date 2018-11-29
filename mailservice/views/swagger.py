@@ -1,7 +1,7 @@
 import os
 import json
 from time import time
-from flask import request, jsonify, abort
+from flask import request, jsonify, make_response, abort
 from flakon import SwaggerBlueprint
 from mailservice.database import db, Report
 
@@ -36,3 +36,18 @@ def get_frequency(user_id):
     if not report:
         abort(404)
     return jsonify({'frequency': report.get_frequency()})
+
+
+@api.operation('deleteFrequency')
+def delete_frequency():
+    user_id = request.args.get('user_id')
+    if not user_id:
+        abort(400)
+    reports = db.session.query(Report).filter(Report.user_id == user_id).all()
+    if not reports:
+        return abort(404)
+
+    for rep in reports:
+        db.session.delete(rep)
+    db.session.commit()
+    return make_response('OK')
