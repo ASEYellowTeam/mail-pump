@@ -43,14 +43,14 @@ Start the [data-service](https://github.com/ytbeepbeep/data-service) microservic
    `source variables.sh`
 
 2. Start the APIs:  
-   `python dataservice/app.py`
+   `python mailservice/app.py`
 
 #### Terminal #3
 1. Load environment variables:  
    `source variables.sh`
 
 2. Start the celery worker:  
-    `celery worker -A mailpump.mailpump -B`
+    `celery worker -A mailservice.mailpump -B`
 
 
 ## Docker
