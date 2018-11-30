@@ -1,4 +1,5 @@
-from mailservice.tests.utility import client
+from mailservice.tests.utility import client, new_report
+from mailservice.database import db, Report
 
 
 def test_get_frequency(client):
@@ -39,3 +40,31 @@ def test_set_frequency(client):
     frequency = float(reply.get_json()['frequency'])
     assert reply.status_code == 200
     assert frequency == test_frequency
+
+
+def test_delete_all_report_by_user(client):
+    tested_app, app = client
+
+    # Add a new report in database
+    report = new_report()
+    with app.app_context():
+        db.session.add(report)
+        db.session.commit()
+        report = db.session.query(Report).first()
+
+    with app.app_context():
+        assert db.session.query(Report).filter(Report.user_id == report.user_id).count() == 1
+
+    # Delete all report by the user
+    assert tested_app.delete('/reports?user_id='+str(report.user_id)).status_code == 200
+    with app.app_context():
+        assert db.session.query(Report).filter(Report.user_id == report.user_id).count() == 0
+
+    # Cannot delete them again
+    assert tested_app.delete('/reports?user_id='+str(report.user_id)).status_code == 404
+
+    # Non existing user
+    assert tested_app.delete('/reports?user_id=-1').status_code == 404
+
+    # Without passing the user_id
+    assert tested_app.delete('/reports').status_code == 400
